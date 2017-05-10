@@ -6,11 +6,11 @@ class perforce::params {
   $mail_to                = 'p4admins'
   $mail_from              = 'p4admin'
   $ssl_prefix             = undef
-  $sdp_version            = 'Rev. SDP/MultiArch/2015.1/15810 (2015/09/21).'
+  $sdp_version            = 'Rev. SDP/MultiArch/2017.1/21808 (2017/01/01).'
   $p4_version             = '2016.2'
   $p4d_version            = '2016.2'
   $p4broker_version       = '2016.2'
-  $source_location_base   = 'ftp://ftp.perforce.com/perforce'
+  $source_location_base   = 'http://ftp.perforce.com/perforce'
 
   $refresh_staged_file    = false
 
