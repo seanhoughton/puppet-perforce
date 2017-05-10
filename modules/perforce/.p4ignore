@@ -1,0 +1,10 @@
+.git
+.p4config
+.DS_Store
+pkg
+pkg/...
+vendor
+vendor/...
+log
+spec/fixtures
+.vagrant
