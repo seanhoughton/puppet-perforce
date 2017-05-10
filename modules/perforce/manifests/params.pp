@@ -7,9 +7,9 @@ class perforce::params {
   $mail_from              = 'p4admin'
   $ssl_prefix             = undef
   $sdp_version            = 'Rev. SDP/MultiArch/2015.1/15810 (2015/09/21).'
-  $p4_version             = '2015.1'
-  $p4d_version            = '2015.1'
-  $p4broker_version       = '2015.1'
+  $p4_version             = '2016.2'
+  $p4d_version            = '2016.2'
+  $p4broker_version       = '2016.2'
   $source_location_base   = 'ftp://ftp.perforce.com/perforce'
 
   $refresh_staged_file    = false
@@ -24,13 +24,7 @@ class perforce::params {
 
   case $::kernel {
     'Linux': {
-      if $::kernelmajversion == '2.6' {
-        if $::architecture == 'x86_64' {
-          $dist_dir = 'bin.linux26x86_64'
-        } else {
-          $dist_dir = 'bin.linux26x86'
-        }
-      }
+      $dist_dir            = 'bin.linux26x86_64'
       $osuser              = 'perforce'
       $osuser_password     = undef
       $osgroup             = 'perforce'

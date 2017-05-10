@@ -58,7 +58,7 @@ If you need to customize options, such as the p4 version to manage or the instal
 
 ~~~
 class { '::perforce::client':
-  p4_version    => '2015.1',
+  p4_version    => '2016.2',
   install_dir   => '/usr/local/bin',
 }
 ~~~
@@ -76,7 +76,7 @@ In addition to the common attributes, the following attributes are available wit
 
 | attribute  | description |
 | ---------- | ----------- |
-| p4_version | The version of the p4 client to manage. Defaults to `2015.1`. |
+| p4_version | The version of the p4 client to manage. Defaults to `2015.2`. |
 
 
 #### Perforce Server
@@ -95,7 +95,7 @@ If you need to customize options, such as the p4d version to manage or the insta
 
 ~~~
 class { '::perforce::server':
-  p4d_version   => '2015.1',
+  p4d_version   => '2015.2',
   install_dir   => '/usr/local/bin',
 }
 ~~~
@@ -116,7 +116,7 @@ In addition to the common attributes, the following attributes are available wit
 
 | attribute  | description |
 | ---------- | ----------- |
-| p4d_version | The version of the p4 client to manage. Defaults to `2015.1`. |
+| p4d_version | The version of the p4 client to manage. Defaults to `2016.2`. |
 
 
 #### Perforce Broker
@@ -135,7 +135,7 @@ If you need to customize options, such as the p4broker version to manage or the 
 
 ~~~
 class { '::perforce::broker':
-  p4broker_version => '2015.1',
+  p4broker_version => '2016.2',
   install_dir      => '/usr/local/bin',
 }
 ~~~
@@ -156,7 +156,7 @@ In addition to the common attributes, the following attributes are available wit
 
 | attribute  | description |
 | ---------- | ----------- |
-| p4broker_version | The version of the p4 client to manage. Defaults to `2015.1`. |
+| p4broker_version | The version of the p4 client to manage. Defaults to `2016.2`. |
 
 ### Server Deployment Package
 
