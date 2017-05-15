@@ -15,15 +15,13 @@ define perforce::instance (
   $p4broker_version = undef,
   $p4broker_target  = undef,
   $depots_mountpoint = undef,  # option symlink to a mountpoint folder
-
   $adminuser        = $perforce::params::adminuser,
   $adminpass        = $perforce::params::adminpass,
   $servicepass      = $perforce::params::servicepass,
-
-
   $mailto           = undef,
   $mailfrom         = undef,
   $mailhost         = undef,
+  $license          = undef
 ) {
 
   $instance_name = $title
@@ -172,6 +170,14 @@ define perforce::instance (
       file { "${p4_dir}/${title}/root/server.id":
         ensure  => 'file',
         content => "${server_id}\n",
+      }
+    }
+
+    if $license != undef {
+      file { "${p4_dir}/${title}/root/license":
+        ensure  => 'file',
+        content => $license,
+        mode    => '0600'
       }
     }
 
