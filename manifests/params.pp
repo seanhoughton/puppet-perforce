@@ -3,10 +3,11 @@
 class perforce::params {
   $adminuser              = 'p4admin'
   $adminpass              = undef
+  $servicepass            = undef
   $mail_to                = 'p4admins'
   $mail_from              = 'p4admin'
   $ssl_prefix             = undef
-  $sdp_version            = 'Rev. SDP/MultiArch/2017.1/21808 (2017/01/01).'
+  $sdp_version            = 'Rev. SDP/MultiArch/2017.1/21808 (2017/03/08).'
   $p4_version             = '2016.2'
   $p4d_version            = '2016.2'
   $p4broker_version       = '2016.2'

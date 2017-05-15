@@ -1,62 +1,34 @@
-#------------------------------------------------------------------------------
-# Copyright (c) Perforce Software, Inc., 2007-2015. All rights reserved
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#
-# 1  Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-#
-# 2.  Redistributions in binary form must reproduce the above copyright
-#     notice, this list of conditions and the following disclaimer in the
-#     documentation and/or other materials provided with the distribution.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL PERFORCE
-# SOFTWARE, INC. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-# THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-# DAMAGE.
+#==============================================================================
+# Copyright and license info is available in the LICENSE file included with
+# the Server Deployment Package (SDP), and also available online:
+# https://swarm.workshop.perforce.com/projects/perforce-software-sdp/view/main/LICENSE
 #------------------------------------------------------------------------------
 
-# trap unbound variables
+# Save SHELLOPTS
+_shellopts=$SHELLOPTS
+
+# Trap unbound (undefined) varialbes, treating them as an error.
 set -u
 
-# Mail to the administrator gets sent here:
-export MAILTO=<%= @mail_to %>
-export MAILFROM=<%= @mail_from %>
-export P4USER=<%= @adminuser %>
-export P4SERVICEUSER=<%= @serviceuser %>
 export OSUSER=<%= @osuser %>
 export SDP_VERSION="<%= @sdp_version %>"
 
-AWK=awk
-CUT=cut
-DF="df -h"
-GREP=grep
-ID=id
-SDPMAIL=mail
-PS=ps
+export AWK=awk
+export CUT=cut
+export DF="df -h"
+export GREP=grep
+export ID=id
+export SDPMAIL=mail
+export PS=ps
 
 OS=`uname`
 if [ "${OS}" = "SunOS" ] ; then
-  AWK=/usr/xpg4/bin/awk
-  ID=/usr/xpg4/bin/id
-  SDPMAIL=mailx
+  export AWK=/usr/xpg4/bin/awk
+  export ID=/usr/xpg4/bin/id
+  export SDPMAIL=mailx
 elif [ "${OS}" = "AIX" ] ; then
-  DF="df -m"
+  export DF="df -m"
 fi
-
-export AWK
-export ID
-export SDPMAIL
-export DF
 
 # Which perforce instance are we configuring? Defaults to 1.
 export SDP_INSTANCE=${1:-1}
@@ -70,38 +42,60 @@ export P4SSLDIR=/p4/ssl
 export P4HOME="/p4/${SDP_INSTANCE}"
 export TMP=${P4HOME}/tmp
 export P4TMP=${P4HOME}/tmp
+
+# Explicitly unset environment variables that affect p4d server if they
+# are defined at startup, excluding those that are always defined in this
+# file, like P4ROOT, P4PORT, P4lOG, and P4JOURNAL.  This prevents cross-
+# instance shell environment contamination if p4_vars is sourced multiple
+# times for different instances.
+unset P4AUTH P4CHANGE P4DEBUG P4AUDIT P4TARGET
+
 export P4ROOT=${P4HOME}/root
+export P4DTG_ROOT=/p4/common/dtg
 export P4JOURNAL=${P4HOME}/logs/journal
 export P4CONFIG=${P4HOME}/.p4config
 export P4TICKETS=${P4HOME}/.p4tickets
 export P4TRUST=${P4HOME}/.p4trust
-export P4ENVIRO=${P4HOME}/.p4enviro
+export P4ENVIRO=/dev/null/.p4enviro
 export DEPOTS=${P4HOME}/depots
 export CHECKPOINTS=${P4HOME}/checkpoints
 export LOGS=${P4HOME}/logs
 export P4LOG=${LOGS}/log
 export P4LOGS=$P4HOME/logs
 export P4CBIN=/p4/common/bin
+export P4CCFG=/p4/common/config
 export P4CLIB=/p4/common/lib
 export PERL5LIB=$P4CLIB:${PERL5LIB:-}
 export PERLHOME=/p4/common/perl
 export PYHOME=/p4/common/python
+export HMS_HOME=/p4/common/hms
 export PATH=$P4HOME/bin:$P4CBIN:$PYHOME/bin:$PERLHOME/site/bin:$PERLHOME/bin:$PATH:.
 export MANPATH=$PERLHOME/site/man:$PERLHOME/man:${MANPATH:-}
-if [ -e ${P4ROOT}/server.id ]; then
-  export SERVERID=`cat ${P4ROOT}/server.id`
+
+if [[ -r ${P4ROOT}/server.id ]]; then
+   export SERVERID=$(cat ${P4ROOT}/server.id)
+else
+   export SERVERID=
 fi
 
 # P4Proxy Settings
 export P4PCACHE=$P4HOME/cache
 
+# Set Proxy monitoring level to 3 in order to monitor all traffic for all operations
+
+export PROXY_MON_LEVEL=3
+
 # Set KEEPCKPS to the number of checkpoint & journal files and their
 # corresponding log files to keep.  Checkpoints and their log file are
 # numbered with the same journal counter number.  Checkpoints/journals
-# and their logs are removed when daily_backup.bat or weekly_backup.bat
-# are run.  The live_checkpoint.bat script does not remove.
+# and their logs are removed when daily_checkpoint.sh, live_checkpoint.sh,
+# or recreate_db_checkpoint.sh are run.
 #  Set KEEPCKPS=0 to avoid automated cleanup of checkpoints and logs.
 export KEEPCKPS=7
+
+# KEEPJNLS allows you to keep a different number of journals than checkpoints
+# in case you rotate the journal more frequently than you run checkpoints.
+export KEEPJNLS=7
 
 # Set KEEPLOGS to the number of server logs to keep, counting back from
 # the most recent.  Server logs are numbered with their corresponding
@@ -120,6 +114,7 @@ export P4DBIN=${P4HOME}/bin/p4d_${SDP_INSTANCE}
 export P4PBIN=${P4HOME}/bin/p4p_${SDP_INSTANCE}
 export P4BROKERBIN=${P4HOME}/bin/p4broker_${SDP_INSTANCE}
 export P4WEBBIN=${P4HOME}/bin/p4web_${SDP_INSTANCE}
+export P4DTGBIN=${P4HOME}/bin/p4dtg_${SDP_INSTANCE}
 
 # Define *_VERSION values.  These will look like "2014.1.899321"
 # or "2015.1_BETA.903064".  For example, to specify behavior specific
@@ -138,4 +133,9 @@ export P4WEBBIN=${P4HOME}/bin/p4web_${SDP_INSTANCE}
 # Sets instance specific vars.  Last so that the caller sees the error.
 if [ -f "/p4/common/config/${P4SERVER}.vars" ] ; then
    . /p4/common/config/${P4SERVER}.vars
+fi
+
+# if 'nounset' was not in SHELLOPTS when we started, call set +u
+if [[ $_shellopts != *nounset* ]]; then
+    set +u
 fi

@@ -1,5 +1,7 @@
 # perforce
 
+Note: this is a fork of [alan_petersen-puppet](https://swarm.workshop.perforce.com/projects/alan_petersen-puppet) which has been updated to use the latest SDP along with some Puppet fixes.
+
 #### Table of Contents
 1. [Module Description - What the module does and why it is useful](#module-description)
 1. [Setup - The basics of getting started with Perforce](#setup)
@@ -37,14 +39,14 @@ The client, server and broker classes support the following common attributes:
 
 | attribute            | description |
 | -------------------- | ----------- |
-| source_location_base | Base location for the source. Defaults to the standard Perforce distribution site: `ftp://ftp.perforce.com/perforce`. This can be hosted locally, using the following protocols: `http(s)`, `puppet`, `ftp`, or `local` (used for network mounts) |
+| source_location_base | Base location for the source. Defaults to the standard Perforce distribution site: `http://ftp.perforce.com/perforce`. This can be hosted locally, using the following protocols: `http(s)`, `puppet`, `ftp`, or `local` (used for network mounts) |
 | dist_dir_base        | Distribution directory base -- used as part of the source path (after the r*version_number* directory). This value is calculated based on the OS and architecture. |
 | staging_base_path    | The location where the binaries will be staged on the local node's filesystem. This defaults to `/var/staging/perforce`. |
 | install_dir          | The location where the binaries will be installed |
 | refresh_staged_file  | a boolean indicating whether the staged file should be refreshed. Defaults to `false`. The implication of this is that new versions will not be downloaded as long as the staged file is present, so upgrades need to have this value (temporarily) set to `true`. This value could be left as `true` if the source_location_base is some local system. |
 
 For example, on 64-bit Linux, the default location for the p4d binary would be
-`ftp://ftp.perforce.com/perforce/r15.1/bin.linux26x86_64/p4d`
+`http://ftp.perforce.com/perforce/r15.1/bin.linux26x86_64/p4d`
 
 #### Perforce Client
 
@@ -95,7 +97,7 @@ If you need to customize options, such as the p4d version to manage or the insta
 
 ~~~
 class { '::perforce::server':
-  p4d_version   => '2015.2',
+  p4d_version   => '2016.2',
   install_dir   => '/usr/local/bin',
 }
 ~~~
@@ -189,6 +191,7 @@ The following attributes can be used to configure how the SDP base installation 
 | ---------- | ----------- |
 | osuser            | Operating system user that will own the SDP directories and executables. This is managed within the class. Defaults to `perforce`. |
 | osgroup           | Operating system group that will own the SDP directories and executables. This is managed within the class. Defaults to `perforce`. |
+| osuser_manage.    | If true, this module will create and manage user and group |
 | adminuser         | Perforce admin user. Defaults to `p4admin`. This user will not be created in the Perforce server instance. |
 | adminpass         | Password for the Perforce admin user. The value will be written to the adminpass file. Defaults to `undef`. |
 | mail_to           | Email address to which administrative messages (e.g. daily backup script output) will be sent. Defaults to `p4admins`. |

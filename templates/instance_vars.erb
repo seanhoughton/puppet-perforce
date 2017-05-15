@@ -1,28 +1,81 @@
-# If the server.id matches the name below, this instance runs as a replica.
-export P4REPLICANAME=<%= @replica_name %>
+# Various scripts send email to $MAILTO.  This can contain comma-delimited list
+# of email addresses (no spaces).
+export MAILTO=<%= @mailto %>
 
-# P4MASTERNAME is server.id of Master for this instance
-export P4MASTERNAME=<%= @master_name %>
+# Specify the email adddress from which emails are sent in $MAILFROM.
+# This must be exactly one email address.
+export MAILFROM=<%= @mailfrom %>
 
-# This is the DNS name of the master server:
-export P4MASTER=<%= @master_dns %>
+export P4USER=<%= @adminuser %>
+
+# P4MASTER_ID is server.id of Master for this instance
+export P4MASTER_ID=<%= @master_id %>
 
 # The setting below should be ssl: if this instance uses ssl.
 export SSL_PREFIX=<%= @ssl_prefix %>
 
-export P4MASTERPORTNUM=<%= @p4port %>
-export P4PORT=${SSL_PREFIX}${P4MASTERPORTNUM}
+export P4PORTNUM=<%= @p4port %>
+export P4PORT=${SSL_PREFIX}${P4PORTNUM}
+
+# Set the value for P4BROKERPORT to Unset if the broker is not
+# used.
 export P4BROKERPORTNUM=<%= @p4brokerport %>
 export P4BROKERPORT=${SSL_PREFIX}${P4BROKERPORTNUM}
-export P4D_FLAGS="-p $P4PORT -r $P4ROOT -J $P4JOURNAL -L $P4LOG -q -d"
-export PROXY_TARGET=${SSL_PREFIX}${P4MASTER}:${P4MASTERPORTNUM}
-export PROXY_PORT=$P4PORT
 
-if [[ "$SERVERID" == "$P4MASTERNAME" ]]; then
-  export P4REPLICA=FALSE
+# These $P4D_FLAGS show when using 'ps' to scan the process table.
+# Other settings affect p4d.
+export P4D_FLAGS="-p $P4PORT -r $P4ROOT -J $P4JOURNAL -L $P4LOG -q -d --pid-file"
+
+# SERVERID is defined in /p4/n/root/server.id.  It will be unset on a server
+# that is not running a p4d process, such as a proxy server host.
+# Override P4TICKETS and P4TRUST for replicas.
+if [[ -n "$SERVERID" && "$SERVERID" != "$P4MASTER_ID" ]]; then
+   export P4REPLICA=TRUE
+   export P4SERVICEUSER=svc_${SERVERID}
+
+   targetServerPort=$($P4DBIN -r $P4ROOT -cshow | egrep "^$SERVERID: P4TARGET = ")
+   targetServerPort=${targetServerPort##* = }
+   targetServerPort=$(echo $targetServerPort)
+
+   if [[ -n "$targetServerPort" ]]; then
+      export P4MASTERPORT=$targetServerPort
+
+      if [[ "$targetServerPort" == *":"* ]]; then
+							# strip of any trailing ':.....' element (eg, ':1666')
+         export P4MASTER=${targetServerPort%:*}
+							# if P4TARGET includes ssl, also need to strip off ssl: from front
+         export P4MASTER=${P4MASTER#*:}
+      else
+         export P4MASTER=<%= @dns_name %>
+      fi
+   else
+      export P4MASTER=<%= @dns_name %>
+      export P4MASTERPORT=${SSL_PREFIX}${P4MASTER}:${P4PORTNUM}
+   fi
+
+   # Set SHAREDDATA=TRUE on replica servers that share their /depotdata
+   # volume with their P4TARGET server.
+   repStyle=$($P4DBIN -r $P4ROOT -cshow|$GREP "^$SERVERID: lbr.replication = ")
+   repStyle=${repStyle##* = }
+   repStyle=$(echo $repStyle)
+   if [[ $repStyle == "shared" ]]; then
+      export SHAREDDATA=TRUE
+   else
+      export SHAREDDATA=FALSE
+   fi
 else
-  export P4REPLICA=TRUE
+   export P4REPLICA=FALSE
+   export P4SERVICEUSER=
+
+   # This is the DNS name of the master server:
+   export P4MASTER=<%= @dns_name %>
+   export SHAREDDATA=FALSE
+   export P4MASTERPORT=${SSL_PREFIX}${P4MASTER}:${P4PORTNUM}
 fi
+
+# Proxy settings.
+export PROXY_TARGET=${SSL_PREFIX}${P4MASTER}:${P4PORTNUM}
+export PROXY_PORT=$P4PORT
 
 # P4Web settings:
 export P4WEBBIN=${P4HOME}/bin/p4web_${SDP_INSTANCE}
@@ -32,8 +85,15 @@ export P4WEBPORT=<%= @p4webport %>
 # Authenticated Browse only mode:
 export P4WEBARGS="-B -p $P4PORT -w $P4WEBPORT -U $OSUSER -L $P4WEBLOG"
 
+# P4DTG Settings:
+export P4DTG_CFG=$P4SERVER
+
 # P4FTP settings:
 export P4FTPPORT=<%= @p4ftpport %>
 export P4FTPBIN=${P4HOME}/bin/p4ftpd_${SDP_INSTANCE}
 export P4FTPLOG=${P4HOME}/logs/ftp.log
 export P4FTPARGS="-d -l $P4FTPPORT -p $P4PORT -u $OSUSER -L $P4FTPLOG"
+
+export SDP_ALWAYS_LOGIN=0
+
+umask 0026

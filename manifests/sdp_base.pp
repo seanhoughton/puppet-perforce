@@ -4,10 +4,7 @@ class perforce::sdp_base (
   $osuser               = $perforce::params::osuser,
   $osuser_password      = $perforce::params::osuser_password,
   $osgroup              = $perforce::params::osgroup,
-  $adminuser            = $perforce::params::adminuser,
-  $adminpass            = $perforce::params::adminpass,
-  $mail_to              = $perforce::params::mail_to,
-  $mail_from            = $perforce::params::mail_from,
+  $osuser_manage        = true,
   $p4_dir               = $perforce::params::p4_dir,
   $depotdata_dir        = $perforce::params::depotdata_dir,
   $metadata_dir         = $perforce::params::metadata_dir,
@@ -40,49 +37,35 @@ class perforce::sdp_base (
     mode   => $default_file_mode,
   }
 
-  if !defined(Group[$osgroup]) {
-    group { $osgroup:
-      ensure => 'present'
+  if $osuser_manage {
+    if !defined(Group[$osgroup]) {
+      group { $osgroup:
+        ensure => 'present'
+      }
+    }
+
+    if !defined(User[$osuser]) {
+      if $perforce::params::sdp_type == 'Unix' {
+        user { $osuser:
+          ensure   => 'present',
+          password => $osuser_password,
+          gid      => $osgroup,
+          home     => $p4_dir,
+        }
+      } else {
+        user { $osuser:
+          ensure   => 'present',
+          password => $osuser_password,
+          groups   => $osgroup,
+        }
+      }
     }
   }
 
-  if !defined(User[$osuser]) {
-    if $perforce::params::sdp_type == 'Unix' {
-      user { $osuser:
-        ensure   => 'present',
-        password => $osuser_password,
-        gid      => $osgroup,
-        home     => $p4_dir,
-      }
-    } else {
-      user { $osuser:
-        ensure   => 'present',
-        password => $osuser_password,
-        groups   => $osgroup,
-      }
-    }
-  }
-
-  $p4_dir_expanded = splitpath($p4_dir)
-  notice("### p4_dir_expanded: ${p4_dir_expanded}")
-  file { $p4_dir_expanded:
-    ensure => 'directory',
-  }
-
-  $depotdata_dir_expanded = splitpath("${depotdata_dir}/p4")
-  file { $depotdata_dir_expanded:
-    ensure => 'directory',
-  }
-
-  $metadata_dir_expanded = splitpath("${metadata_dir}/p4")
-  file { $metadata_dir_expanded:
-    ensure => 'directory',
-  }
-
-  $logs_dir_expanded = splitpath("${logs_dir}/p4")
-  file { $logs_dir_expanded:
-    ensure => 'directory',
-  }
+  ensure_resource('file', splitpath($p4_dir), { ensure => 'directory' })
+  ensure_resource('file', splitpath("${depotdata_dir}/p4"), { ensure => 'directory' })
+  ensure_resource('file', splitpath("${metadata_dir}/p4"), { ensure => 'directory' })
+  ensure_resource('file', splitpath("${logs_dir}/p4"), { ensure => 'directory' })
 
   if(!defined(Class['staging'])) {
     class { 'staging':
@@ -119,11 +102,6 @@ class perforce::sdp_base (
     }
   }
 
-  file { "${depotdata_dir}/common/bin/p4d_base":
-    source  => 'puppet:///modules/perforce/p4d_base',
-    require => Staging::Extract[$perforce::params::sdp_distro],
-  }
-
   file { "${p4_dir}/common":
     ensure => 'symlink',
     target => "${depotdata_dir}/common",
@@ -144,6 +122,12 @@ class perforce::sdp_base (
 
   file { "${p4_dir}/common/bin/p4_vars":
     content => template('perforce/p4_vars.erb')
+  }
+
+  file { '/var/log/p4':
+    ensure => 'directory',
+    owner  => $osuser,
+    group  => $osgroup
   }
 
   if $adminpass {

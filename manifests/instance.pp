@@ -1,12 +1,12 @@
 # perforce::instance defined type
 #   - used to manage an instance of a p4d or p4broker in an sdp setting
 define perforce::instance (
-  $ensure           = 'running', # one setting for all managed services
+  $ensure           = undef, # one setting for all managed services
   # p4d settings
-  $p4port           = undef,
-  $server_id        = $title, # server_id for the instance
-  $is_master        = true,  # true=master, false=replica
-  $master_dns       = undef, # set if instance is a replica
+  $p4port           = '1666',  # just the port number
+  $dns_name         = undef,   # DNS name of this server
+  $server_id        = undef,
+  $master_id        = 'master', # ID of the master
   $ssl              = false,
   $case_sensitive   = false,
   $p4d_version      = undef,
@@ -14,6 +14,16 @@ define perforce::instance (
   $p4brokerport     = undef,
   $p4broker_version = undef,
   $p4broker_target  = undef,
+  $depots_mountpoint = undef,  # option symlink to a mountpoint folder
+
+  $adminuser        = $perforce::params::adminuser,
+  $adminpass        = $perforce::params::adminpass,
+  $servicepass      = $perforce::params::servicepass,
+
+
+  $mailto           = undef,
+  $mailfrom         = undef,
+  $mailhost         = undef,
 ) {
 
   $instance_name = $title
@@ -34,7 +44,8 @@ define perforce::instance (
       $service_enable = false
     }
     default: {
-      fail("Unknown ensure value '${ensure}'. Must be one of [running,stopped]")
+      # undefined means don't manage
+      #fail("Unknown ensure value '${ensure}'. Must be one of [running,stopped]")
     }
   }
 
@@ -65,7 +76,8 @@ define perforce::instance (
           "${depotdata_dir}/p4/${title}/bin",
           "${depotdata_dir}/p4/${title}/ssl",
           "${logs_dir}/p4/${title}",
-          "${logs_dir}/p4/${title}/logs"]:
+          "${logs_dir}/p4/${title}/logs",
+          "${logs_dir}/p4/${title}/logs/journals.rep"]:
       ensure => directory,
   }
 
@@ -77,10 +89,36 @@ define perforce::instance (
     }
   }
 
+  # manage journals
+  file { "${p4_dir}/${title}/journals.rep":
+    ensure => 'link',
+    target => "${logs_dir}/p4/${title}/journals.rep"
+  }
+
   # manage link to instance log directory
   file { "${p4_dir}/${title}/logs":
     ensure => 'link',
     target => "${logs_dir}/p4/${title}/logs",
+  }
+
+  if $::kernel == 'Linux' {
+    # add a link in standard linux log folder
+    file { "/var/log/p4/${title}":
+      ensure => 'link',
+      target => "${logs_dir}/p4/${title}/logs"
+    }
+  }
+
+  file { "${depotdata_dir}/common/config/.p4passwd.p4_${title}.admin":
+    ensure  => 'file',
+    content => $adminpass,
+    require => File["${depotdata_dir}/common"]
+  }
+
+  file { "${depotdata_dir}/common/config/.p4passwd.p4_${title}.service":
+    ensure  => 'file',
+    content => $servicepass,
+    require => File["${depotdata_dir}/common"]
   }
 
   ###################################################################
@@ -97,11 +135,6 @@ define perforce::instance (
             using this resource.')
     }
 
-    if $is_master {
-      $master_name = $server_id
-    } else {
-      $master_name = $master_dns
-    }
 
     if $p4d_version == undef {
       $p4d_instance_version = $perforce::sdp_base::p4d_version
@@ -111,30 +144,47 @@ define perforce::instance (
 
     # manage instance directory p4d structure
     file { ["${depotdata_dir}/p4/${title}/checkpoints",
-            "${depotdata_dir}/p4/${title}/depots",
             "${depotdata_dir}/p4/${title}/tmp",
             "${metadata_dir}/p4/${title}",
-            "${metadata_dir}/p4/${title}/root",
+            "${metadata_dir}/p4/${title}/db1",
+            "${metadata_dir}/p4/${title}/db1/save",
+            "${metadata_dir}/p4/${title}/db2",
+            "${metadata_dir}/p4/${title}/db2/save",
             "${metadata_dir}/p4/${title}/offline_db"]:
         ensure => directory,
     }
 
-    # manage link to metadata directory
-    file { "${p4_dir}/${title}/root":
-      ensure => 'link',
-      target => "${metadata_dir}/p4/${title}/root",
+    # optional symlink to depot mount
+    if $depots_mountpoint != undef {
+      file { "${depotdata_dir}/p4/${title}/depots":
+        ensure  => 'link',
+        target  => $depots_mountpoint,
+        require => File[$depots_mountpoint]
+      }
+    } else {
+      file { "${depotdata_dir}/p4/${title}/depots":
+        ensure => 'directory'
+      }
     }
 
-    # manage server.id file
-    file { "${p4_dir}/${title}/root/server.id":
-      ensure  => 'file',
-      content => "${server_id}\n",
+    # manage server.id file if set
+    if $serverid != undef {
+      file { "${p4_dir}/${title}/root/server.id":
+        ensure  => 'file',
+        content => "${server_id}\n",
+      }
+    }
+
+    # manage link to online directory
+    file { "${p4_dir}/${title}/root":
+      ensure => 'link',
+      target => "${metadata_dir}/p4/${title}/db1",
     }
 
     # manage link to offline_db directory
     file { "${p4_dir}/${title}/offline_db":
       ensure => 'link',
-      target => "${metadata_dir}/p4/${title}/offline_db",
+      target => "${metadata_dir}/p4/${title}/db2",
     }
 
     # manage instance p4d service
@@ -147,11 +197,19 @@ define perforce::instance (
         owner  => 'root',
         group  => 'root',
       }
-      # service
-      service {"p4d_${title}":
-        ensure => $service_ensure,
-        enable => $service_enable,
+      if $ensure != undef {
+        # service
+        service {"p4d_${title}":
+          ensure => $service_ensure,
+          enable => $service_enable,
+        }
+        $service_notifies = [Service["p4d_${title}"]]
       }
+      else {
+        $service_notifies = []
+      }
+    } else {
+      $service_notifies = []
     }
 
     # manage instance variables file
@@ -160,7 +218,7 @@ define perforce::instance (
       path    => "${p4_common}/config/p4_${title}.vars",
       mode    => '0700',
       content => template('perforce/instance_vars.erb'),
-      notify  => Service["p4d_${title}"],
+      notify  => $service_notifies,
     }
 
     # manage link to appropriate p4 client
@@ -168,7 +226,7 @@ define perforce::instance (
       ensure => 'link',
       path   => "${p4_dir}/${title}/bin/p4_${title}",
       target => "${p4_common}/bin/p4_${p4d_instance_version}_bin",
-      notify => Service["p4d_${title}"],
+      notify => $service_notifies,
     }
 
     # manage link to instance-specific p4d
@@ -176,7 +234,7 @@ define perforce::instance (
       ensure => 'link',
       path   => "${p4_common}/bin/p4d_${title}_bin",
       target => "${p4_common}/bin/p4d_${p4d_instance_version}_bin",
-      notify => Service["p4d_${title}"],
+      notify => $service_notifies,
     }
 
     # manage instance wrapper
@@ -185,7 +243,7 @@ define perforce::instance (
       path    => "${p4_dir}/${title}/bin/p4d_${title}",
       content => template('perforce/instance_script.erb'),
       mode    => '0700',
-      notify  => Service["p4d_${title}"],
+      notify  => $service_notifies,
     }
 
     # manage instance init script
@@ -194,7 +252,7 @@ define perforce::instance (
       path    => "${p4_dir}/${title}/bin/p4d_${title}_init",
       content => template('perforce/p4d_instance_init.erb'),
       mode    => '0700',
-      notify  => Service["p4d_${title}"],
+      notify  => $service_notifies,
     }
 
   } ### END MANAGE P4D INSTANCE
