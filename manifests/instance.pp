@@ -35,28 +35,25 @@
 # @param license           If set, manage the content of `license` in the root folder.
 #
 define perforce::instance (
-  String $ensure            = undef,
-  # p4d settings
-  String $p4port            = '1666',
-  String $dns_name          = undef,
-  String $server_id         = undef,
-  String $master_id         = 'master',
-  String $ssl               = false,
-  Boolean $case_sensitive   = false,
-  String $p4d_version       = undef,
-  # p4broker_settings
-  String $p4brokerport      = undef,
-  String $p4broker_version  = undef,
-  String $p4broker_target   = undef,
-  # general settings
-  String $depots_mountpoint = undef,
-  String $adminuser         = $perforce::params::adminuser,
-  String $adminpass         = $perforce::params::adminpass,
-  String $servicepass       = $perforce::params::servicepass,
-  String $mailto            = undef,
-  String $mailfrom          = undef,
-  String $mailhost          = undef,
-  String $license           = undef
+  Optional[String] $ensure            = undef,
+  String $p4port                      = '1666',
+  Optional[String] $dns_name          = undef,
+  Optional[String] $server_id         = undef,
+  String $master_id                   = 'master',
+  Boolean $ssl                        = false,
+  Boolean $case_sensitive             = false,
+  Optional[String] $p4d_version       = undef,
+  Optional[String] $p4brokerport      = undef,
+  Optional[String] $p4broker_version  = undef,
+  Optional[String] $p4broker_target   = undef,
+  Optional[String] $depots_mountpoint = undef,
+  String $adminuser                   = $perforce::params::adminuser,
+  String $adminpass                   = $perforce::params::adminpass,
+  String $servicepass                 = $perforce::params::servicepass,
+  Optional[String] $mailto            = undef,
+  Optional[String] $mailfrom          = undef,
+  Optional[String] $mailhost          = undef,
+  Optional[String] $license           = undef
 ) {
 
   $instance_name = $title
@@ -110,7 +107,7 @@ define perforce::instance (
           "${depotdata_dir}/p4/${title}/ssl",
           "${logs_dir}/p4/${title}",
           "${logs_dir}/p4/${title}/logs",
-          "${logs_dir}/p4/${title}/logs/journals.rep"]:
+          "${logs_dir}/p4/${title}/journals.rep"]:
       ensure => directory,
   }
 
@@ -182,8 +179,7 @@ define perforce::instance (
             "${metadata_dir}/p4/${title}/db1",
             "${metadata_dir}/p4/${title}/db1/save",
             "${metadata_dir}/p4/${title}/db2",
-            "${metadata_dir}/p4/${title}/db2/save",
-            "${metadata_dir}/p4/${title}/offline_db"]:
+            "${metadata_dir}/p4/${title}/db2/save"]:
         ensure => directory,
     }
 
@@ -215,16 +211,20 @@ define perforce::instance (
       }
     }
 
-    # manage link to online directory
-    file { "${p4_dir}/${title}/root":
-      ensure => 'link',
-      target => "${metadata_dir}/p4/${title}/db1",
+    # manage link to online directory, only create once
+    # because it can change as part of db regeneration
+    exec { "create ${p4_dir}/${title}/root":
+      command => "ln -s '${metadata_dir}/p4/${title}/db1' '${p4_dir}/${title}/root'",
+      creates => "${p4_dir}/${title}/root",
+      user    => $osuser
     }
 
-    # manage link to offline_db directory
-    file { "${p4_dir}/${title}/offline_db":
-      ensure => 'link',
-      target => "${metadata_dir}/p4/${title}/db2",
+    # manage link to offline_db directory, only create once
+    # because it can change as part of db regeneration
+    exec { "create ${p4_dir}/${title}/offline_db":
+      command => "ln -s '${metadata_dir}/p4/${title}/db2' '${p4_dir}/${title}/offline_db'",
+      creates => "${p4_dir}/${title}/offline_db",
+      user    => $osuser
     }
 
     # manage instance p4d service

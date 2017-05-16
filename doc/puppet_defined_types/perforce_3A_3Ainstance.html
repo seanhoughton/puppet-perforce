@@ -105,7 +105,7 @@
         <span class='name'>ensure</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -142,7 +142,7 @@ manage the service.</p>
         <span class='name'>dns_name</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -160,7 +160,7 @@ manage the service.</p>
         <span class='name'>server_id</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -196,7 +196,7 @@ manage the service.</p>
         <span class='name'>ssl</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>false</tt>)</em>
@@ -232,7 +232,7 @@ manage the service.</p>
         <span class='name'>p4d_version</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -250,7 +250,7 @@ manage the service.</p>
         <span class='name'>p4brokerport</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -263,7 +263,7 @@ manage the service.</p>
         <span class='name'>p4broker_version</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -276,7 +276,7 @@ manage the service.</p>
         <span class='name'>p4broker_target</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -289,7 +289,7 @@ manage the service.</p>
         <span class='name'>depots_mountpoint</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -360,7 +360,7 @@ manage the service.</p>
         <span class='name'>mailto</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -378,7 +378,7 @@ manage the service.</p>
         <span class='name'>mailfrom</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -396,7 +396,7 @@ manage the service.</p>
         <span class='name'>mailhost</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -414,7 +414,7 @@ manage the service.</p>
         <span class='name'>license</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -806,28 +806,25 @@ manage the service.</p>
         <pre class="code"><span class="info file"># File 'manifests/instance.pp', line 37</span>
 
 define perforce::instance (
-  String $ensure            = undef,
-  # p4d settings
-  String $p4port            = &#39;1666&#39;,
-  String $dns_name          = undef,
-  String $server_id         = undef,
-  String $master_id         = &#39;master&#39;,
-  String $ssl               = false,
-  Boolean $case_sensitive   = false,
-  String $p4d_version       = undef,
-  # p4broker_settings
-  String $p4brokerport      = undef,
-  String $p4broker_version  = undef,
-  String $p4broker_target   = undef,
-  # general settings
-  String $depots_mountpoint = undef,
-  String $adminuser         = $perforce::params::adminuser,
-  String $adminpass         = $perforce::params::adminpass,
-  String $servicepass       = $perforce::params::servicepass,
-  String $mailto            = undef,
-  String $mailfrom          = undef,
-  String $mailhost          = undef,
-  String $license           = undef
+  Optional[String] $ensure            = undef,
+  String $p4port                      = &#39;1666&#39;,
+  Optional[String] $dns_name          = undef,
+  Optional[String] $server_id         = undef,
+  String $master_id                   = &#39;master&#39;,
+  Boolean $ssl                        = false,
+  Boolean $case_sensitive             = false,
+  Optional[String] $p4d_version       = undef,
+  Optional[String] $p4brokerport      = undef,
+  Optional[String] $p4broker_version  = undef,
+  Optional[String] $p4broker_target   = undef,
+  Optional[String] $depots_mountpoint = undef,
+  String $adminuser                   = $perforce::params::adminuser,
+  String $adminpass                   = $perforce::params::adminpass,
+  String $servicepass                 = $perforce::params::servicepass,
+  Optional[String] $mailto            = undef,
+  Optional[String] $mailfrom          = undef,
+  Optional[String] $mailhost          = undef,
+  Optional[String] $license           = undef
 ) {
 
   $instance_name = $title
@@ -881,7 +878,7 @@ define perforce::instance (
           &quot;${depotdata_dir}/p4/${title}/ssl&quot;,
           &quot;${logs_dir}/p4/${title}&quot;,
           &quot;${logs_dir}/p4/${title}/logs&quot;,
-          &quot;${logs_dir}/p4/${title}/logs/journals.rep&quot;]:
+          &quot;${logs_dir}/p4/${title}/journals.rep&quot;]:
       ensure =&gt; directory,
   }
 
@@ -953,8 +950,7 @@ define perforce::instance (
             &quot;${metadata_dir}/p4/${title}/db1&quot;,
             &quot;${metadata_dir}/p4/${title}/db1/save&quot;,
             &quot;${metadata_dir}/p4/${title}/db2&quot;,
-            &quot;${metadata_dir}/p4/${title}/db2/save&quot;,
-            &quot;${metadata_dir}/p4/${title}/offline_db&quot;]:
+            &quot;${metadata_dir}/p4/${title}/db2/save&quot;]:
         ensure =&gt; directory,
     }
 
@@ -986,16 +982,20 @@ define perforce::instance (
       }
     }
 
-    # manage link to online directory
-    file { &quot;${p4_dir}/${title}/root&quot;:
-      ensure =&gt; &#39;link&#39;,
-      target =&gt; &quot;${metadata_dir}/p4/${title}/db1&quot;,
+    # manage link to online directory, only create once
+    # because it can change as part of db regeneration
+    exec { &quot;create ${p4_dir}/${title}/root&quot;:
+      command =&gt; &quot;ln -s &#39;${metadata_dir}/p4/${title}/db1&#39; &#39;${p4_dir}/${title}/root&#39;&quot;,
+      creates =&gt; &quot;${p4_dir}/${title}/root&quot;,
+      user    =&gt; $osuser
     }
 
-    # manage link to offline_db directory
-    file { &quot;${p4_dir}/${title}/offline_db&quot;:
-      ensure =&gt; &#39;link&#39;,
-      target =&gt; &quot;${metadata_dir}/p4/${title}/db2&quot;,
+    # manage link to offline_db directory, only create once
+    # because it can change as part of db regeneration
+    exec { &quot;create ${p4_dir}/${title}/offline_db&quot;:
+      command =&gt; &quot;ln -s &#39;${metadata_dir}/p4/${title}/db2&#39; &#39;${p4_dir}/${title}/offline_db&#39;&quot;,
+      creates =&gt; &quot;${p4_dir}/${title}/offline_db&quot;,
+      user    =&gt; $osuser
     }
 
     # manage instance p4d service
@@ -1163,7 +1163,7 @@ define perforce::instance (
 </div>
 
       <div id="footer">
-  Generated on Tue May 16 13:26:35 2017 by
+  Generated on Tue May 16 13:58:28 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.9 (ruby-2.4.1).
 </div>

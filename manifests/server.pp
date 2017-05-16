@@ -1,16 +1,16 @@
 # perforce::server class
 #   - used to manage the p4d binary
 class perforce::server (
-  $p4d_version          = $perforce::params::p4d_version,
-  $p4d_executable       = $perforce::params::p4d_executable,
-  $source_location_base = $perforce::params::source_location_base,
-  $dist_dir             = $perforce::params::dist_dir,
-  $install_dir          = undef,
-  $staging_base_path    = $perforce::params::staging_base_path,
-  $refresh_staged_file  = $perforce::params::refresh_staged_file,
-  $default_install_dir  = $perforce::params::default_install_dir,
-  $default_os_user      = $perforce::params::default_os_user,
-  $default_os_group     = $perforce::params::default_os_group,
+  String $p4d_version           = $perforce::params::p4d_version,
+  String $p4d_executable        = $perforce::params::p4d_executable,
+  String $source_location_base  = $perforce::params::source_location_base,
+  String $dist_dir              = $perforce::params::dist_dir,
+  Optional[String] $install_dir = undef,
+  String $staging_base_path     = $perforce::params::staging_base_path,
+  Boolean $refresh_staged_file  = $perforce::params::refresh_staged_file,
+  String $default_install_dir   = $perforce::params::default_install_dir,
+  String $default_os_user       = $perforce::params::default_os_user,
+  String $default_os_group      = $perforce::params::default_os_group,
 ) inherits perforce::params {
 
   $p4d_version_short = regsubst($p4d_version, '^20', '', 'G')

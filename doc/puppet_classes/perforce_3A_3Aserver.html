@@ -93,7 +93,7 @@
         <span class='name'>p4d_version</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::p4d_version</tt>)</em>
@@ -106,7 +106,7 @@
         <span class='name'>p4d_executable</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::p4d_executable</tt>)</em>
@@ -119,7 +119,7 @@
         <span class='name'>source_location_base</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::source_location_base</tt>)</em>
@@ -132,7 +132,7 @@
         <span class='name'>dist_dir</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::dist_dir</tt>)</em>
@@ -145,7 +145,7 @@
         <span class='name'>install_dir</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -158,7 +158,7 @@
         <span class='name'>staging_base_path</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::staging_base_path</tt>)</em>
@@ -171,7 +171,7 @@
         <span class='name'>refresh_staged_file</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::refresh_staged_file</tt>)</em>
@@ -184,7 +184,7 @@
         <span class='name'>default_install_dir</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::default_install_dir</tt>)</em>
@@ -197,7 +197,7 @@
         <span class='name'>default_os_user</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::default_os_user</tt>)</em>
@@ -210,7 +210,7 @@
         <span class='name'>default_os_group</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$perforce::params::default_os_group</tt>)</em>
@@ -314,16 +314,16 @@
         <pre class="code"><span class="info file"># File 'manifests/server.pp', line 3</span>
 
 class perforce::server (
-  $p4d_version          = $perforce::params::p4d_version,
-  $p4d_executable       = $perforce::params::p4d_executable,
-  $source_location_base = $perforce::params::source_location_base,
-  $dist_dir             = $perforce::params::dist_dir,
-  $install_dir          = undef,
-  $staging_base_path    = $perforce::params::staging_base_path,
-  $refresh_staged_file  = $perforce::params::refresh_staged_file,
-  $default_install_dir  = $perforce::params::default_install_dir,
-  $default_os_user      = $perforce::params::default_os_user,
-  $default_os_group     = $perforce::params::default_os_group,
+  String $p4d_version           = $perforce::params::p4d_version,
+  String $p4d_executable        = $perforce::params::p4d_executable,
+  String $source_location_base  = $perforce::params::source_location_base,
+  String $dist_dir              = $perforce::params::dist_dir,
+  Optional[String] $install_dir = undef,
+  String $staging_base_path     = $perforce::params::staging_base_path,
+  Boolean $refresh_staged_file  = $perforce::params::refresh_staged_file,
+  String $default_install_dir   = $perforce::params::default_install_dir,
+  String $default_os_user       = $perforce::params::default_os_user,
+  String $default_os_group      = $perforce::params::default_os_group,
 ) inherits perforce::params {
 
   $p4d_version_short = regsubst($p4d_version, &#39;^20&#39;, &#39;&#39;, &#39;G&#39;)
@@ -401,7 +401,7 @@ class perforce::server (
 </div>
 
       <div id="footer">
-  Generated on Tue May 16 13:26:35 2017 by
+  Generated on Tue May 16 13:58:28 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.9 (ruby-2.4.1).
 </div>
