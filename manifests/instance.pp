@@ -156,8 +156,7 @@ define perforce::instance (
     if $depots_mountpoint != undef {
       file { "${depotdata_dir}/p4/${title}/depots":
         ensure  => 'link',
-        target  => $depots_mountpoint,
-        require => File[$depots_mountpoint]
+        target  => $depots_mountpoint
       }
     } else {
       file { "${depotdata_dir}/p4/${title}/depots":
