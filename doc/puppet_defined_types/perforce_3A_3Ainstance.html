@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Defined Type: perforce::instance
+  
+    &mdash; Documentation by YARD 0.9.9
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "puppet_defined_types::perforce::instance";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../puppet_defined_type_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (p)</a> &raquo;
+    <span class='title'><span class='object_link'>Defined Types</span></span>
+     &raquo; 
+    <span class="title">perforce::instance</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="../puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Defined Type: perforce::instance</h1>
+<div class="box_info">
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>
+      manifests/instance.pp
+    </dd>
+  </dl>
+</div>
+
+  <h2>Summary</h2>
+  Used to manage an instance of a p4d or p4broker in an sdp setting
+
+<h2>Overview</h2>
+<div class="docstring">
+  <div class="discussion">
+    
+<p>perforce::instance</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>#include ::perforce::sdp_base
+#include ::perforce::client
+#include ::perforce::server
+
+::perforce::instance {&#39;1&#39;:
+  server_id    =&gt; &#39;master&#39;,
+  ensure       =&gt; &#39;running&#39;,
+  p4port       =&gt; &#39;1666&#39;,
+}</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>ensure</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If defined, manage the service, if <code>undef</code> create, but don&#39;t
+manage the service.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p4port</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;1666&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Port number to listen on (not full P4PORT).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>dns_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>External DNS name of this server.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>server_id</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If defined, set the server ID to this value.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>master_id</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;master&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>ID of the master server.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ssl</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not ssl is required for the instance.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>case_sensitive</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not to use a case sensitive server.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p4d_version</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The version of p4d to use.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p4brokerport</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p4broker_version</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p4broker_target</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>depots_mountpoint</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Option symlink to a mountpoint folder.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>adminuser</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$perforce::params::adminuser</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Admin username, this will be cached for use by /p4/common/bin/p4login</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>adminpass.</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Admin password, this will be cached for use by /p4/common/bin/p4login</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>servicepass</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$perforce::params::servicepass</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Admin username, this will be cached for use by /p4/common/bin/p4login
+-service</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>mailto</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Email address to send p4reviews to.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>mailfrom</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Email address for <code>from</code> field for p4reviews.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>mailhost</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Smtp server to use for sending email.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>license</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If set, manage the content of <code>license</code> in the root folder.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>adminpass</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$perforce::params::adminpass</tt>)</em>
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><div class="method_details_list">
+  <table class="source_code">
+    <tr>
+      <td>
+        <pre class="lines">
+
+
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387</pre>
+      </td>
+      <td>
+        <pre class="code"><span class="info file"># File 'manifests/instance.pp', line 37</span>
+
+define perforce::instance (
+  String $ensure            = undef,
+  # p4d settings
+  String $p4port            = &#39;1666&#39;,
+  String $dns_name          = undef,
+  String $server_id         = undef,
+  String $master_id         = &#39;master&#39;,
+  String $ssl               = false,
+  Boolean $case_sensitive   = false,
+  String $p4d_version       = undef,
+  # p4broker_settings
+  String $p4brokerport      = undef,
+  String $p4broker_version  = undef,
+  String $p4broker_target   = undef,
+  # general settings
+  String $depots_mountpoint = undef,
+  String $adminuser         = $perforce::params::adminuser,
+  String $adminpass         = $perforce::params::adminpass,
+  String $servicepass       = $perforce::params::servicepass,
+  String $mailto            = undef,
+  String $mailfrom          = undef,
+  String $mailhost          = undef,
+  String $license           = undef
+) {
+
+  $instance_name = $title
+
+  if $ssl {
+    $ssl_prefix = &#39;ssl:&#39;
+  } else {
+    $ssl_prefix = &#39;&#39;
+  }
+
+  case $ensure {
+    &#39;running&#39;: {
+      $service_ensure = &#39;running&#39;
+      $service_enable = true
+    }
+    &#39;stopped&#39;: {
+      $service_ensure = &#39;stopped&#39;
+      $service_enable = false
+    }
+    default: {
+      # undefined means don&#39;t manage
+      #fail(&quot;Unknown ensure value &#39;${ensure}&#39;. Must be one of [running,stopped]&quot;)
+    }
+  }
+
+  $osuser        = $perforce::sdp_base::osuser
+  $osgroup       = $perforce::sdp_base::osuser
+  $p4_dir        = $perforce::sdp_base::p4_dir
+  $depotdata_dir = $perforce::sdp_base::depotdata_dir
+  $metadata_dir  = $perforce::sdp_base::metadata_dir
+  $logs_dir      = $perforce::sdp_base::logs_dir
+
+  $p4_common     = &quot;${p4_dir}/common&quot;
+
+  File {
+    owner =&gt; $osuser,
+    group =&gt; $osgroup,
+    mode  =&gt; &#39;0600&#39;,
+  }
+
+  # the perforce::sdp_base class ensures that the base software is installed and
+  # available, so this needs to be declared
+  if(!defined(Class[&#39;perforce::sdp_base&#39;])) {
+    fail(&#39;Usage: must declare perforce::sdp_base class before
+          using this resource.&#39;)
+  }
+
+  # manage instance directory structure
+  file { [&quot;${depotdata_dir}/p4/${title}&quot;,
+          &quot;${depotdata_dir}/p4/${title}/bin&quot;,
+          &quot;${depotdata_dir}/p4/${title}/ssl&quot;,
+          &quot;${logs_dir}/p4/${title}&quot;,
+          &quot;${logs_dir}/p4/${title}/logs&quot;,
+          &quot;${logs_dir}/p4/${title}/logs/journals.rep&quot;]:
+      ensure =&gt; directory,
+  }
+
+  # manage top-level instance link
+  if(!defined(File[&quot;${p4_dir}/${title}&quot;])) {
+    file { &quot;${p4_dir}/${title}&quot;:
+      ensure =&gt; &#39;link&#39;,
+      target =&gt; &quot;${depotdata_dir}/p4/${title}&quot;,
+    }
+  }
+
+  # manage journals
+  file { &quot;${p4_dir}/${title}/journals.rep&quot;:
+    ensure =&gt; &#39;link&#39;,
+    target =&gt; &quot;${logs_dir}/p4/${title}/journals.rep&quot;
+  }
+
+  # manage link to instance log directory
+  file { &quot;${p4_dir}/${title}/logs&quot;:
+    ensure =&gt; &#39;link&#39;,
+    target =&gt; &quot;${logs_dir}/p4/${title}/logs&quot;,
+  }
+
+  if $::kernel == &#39;Linux&#39; {
+    # add a link in standard linux log folder
+    file { &quot;/var/log/p4/${title}&quot;:
+      ensure =&gt; &#39;link&#39;,
+      target =&gt; &quot;${logs_dir}/p4/${title}/logs&quot;
+    }
+  }
+
+  file { &quot;${depotdata_dir}/common/config/.p4passwd.p4_${title}.admin&quot;:
+    ensure  =&gt; &#39;file&#39;,
+    content =&gt; $adminpass,
+    require =&gt; File[&quot;${depotdata_dir}/common&quot;]
+  }
+
+  file { &quot;${depotdata_dir}/common/config/.p4passwd.p4_${title}.service&quot;:
+    ensure  =&gt; &#39;file&#39;,
+    content =&gt; $servicepass,
+    require =&gt; File[&quot;${depotdata_dir}/common&quot;]
+  }
+
+  ###################################################################
+  ### MANAGE THE P4D INSTANCE
+  if($p4port != undef) {
+
+    if(!defined(Class[&#39;perforce::client&#39;])) {
+      fail(&#39;Usage: must declare perforce::client class before
+            using this resource.&#39;)
+    }
+
+    if(!defined(Class[&#39;perforce::server&#39;])) {
+      fail(&#39;Usage: must declare perforce::server class before
+            using this resource.&#39;)
+    }
+
+
+    if $p4d_version == undef {
+      $p4d_instance_version = $perforce::sdp_base::p4d_version
+    } else {
+      $p4d_instance_version = $p4d_version
+    }
+
+    # manage instance directory p4d structure
+    file { [&quot;${depotdata_dir}/p4/${title}/checkpoints&quot;,
+            &quot;${depotdata_dir}/p4/${title}/tmp&quot;,
+            &quot;${metadata_dir}/p4/${title}&quot;,
+            &quot;${metadata_dir}/p4/${title}/db1&quot;,
+            &quot;${metadata_dir}/p4/${title}/db1/save&quot;,
+            &quot;${metadata_dir}/p4/${title}/db2&quot;,
+            &quot;${metadata_dir}/p4/${title}/db2/save&quot;,
+            &quot;${metadata_dir}/p4/${title}/offline_db&quot;]:
+        ensure =&gt; directory,
+    }
+
+    # optional symlink to depot mount
+    if $depots_mountpoint != undef {
+      file { &quot;${depotdata_dir}/p4/${title}/depots&quot;:
+        ensure  =&gt; &#39;link&#39;,
+        target  =&gt; $depots_mountpoint
+      }
+    } else {
+      file { &quot;${depotdata_dir}/p4/${title}/depots&quot;:
+        ensure =&gt; &#39;directory&#39;
+      }
+    }
+
+    # manage server.id file if set
+    if $serverid != undef {
+      file { &quot;${p4_dir}/${title}/root/server.id&quot;:
+        ensure  =&gt; &#39;file&#39;,
+        content =&gt; &quot;${server_id}\n&quot;,
+      }
+    }
+
+    if $license != undef {
+      file { &quot;${p4_dir}/${title}/root/license&quot;:
+        ensure  =&gt; &#39;file&#39;,
+        content =&gt; $license,
+        mode    =&gt; &#39;0600&#39;
+      }
+    }
+
+    # manage link to online directory
+    file { &quot;${p4_dir}/${title}/root&quot;:
+      ensure =&gt; &#39;link&#39;,
+      target =&gt; &quot;${metadata_dir}/p4/${title}/db1&quot;,
+    }
+
+    # manage link to offline_db directory
+    file { &quot;${p4_dir}/${title}/offline_db&quot;:
+      ensure =&gt; &#39;link&#39;,
+      target =&gt; &quot;${metadata_dir}/p4/${title}/db2&quot;,
+    }
+
+    # manage instance p4d service
+    if $::kernel == &#39;Linux&#39; {
+      # service script
+      file { &quot;p4d_${title}_service&quot;:
+        ensure =&gt; &#39;link&#39;,
+        path   =&gt; &quot;/etc/init.d/p4d_${title}&quot;,
+        target =&gt; &quot;${p4_dir}/${title}/bin/p4d_${title}_init&quot;,
+        owner  =&gt; &#39;root&#39;,
+        group  =&gt; &#39;root&#39;,
+      }
+      if $ensure != undef {
+        # service
+        service {&quot;p4d_${title}&quot;:
+          ensure =&gt; $service_ensure,
+          enable =&gt; $service_enable,
+        }
+        $service_notifies = [Service[&quot;p4d_${title}&quot;]]
+      }
+      else {
+        $service_notifies = []
+      }
+    } else {
+      $service_notifies = []
+    }
+
+    # manage instance variables file
+    file { &quot;p4_${title}.vars&quot;:
+      ensure  =&gt; &#39;file&#39;,
+      path    =&gt; &quot;${p4_common}/config/p4_${title}.vars&quot;,
+      mode    =&gt; &#39;0700&#39;,
+      content =&gt; template(&#39;perforce/instance_vars.erb&#39;),
+      notify  =&gt; $service_notifies,
+    }
+
+    # manage link to appropriate p4 client
+    file { &quot;p4_${title}&quot;:
+      ensure =&gt; &#39;link&#39;,
+      path   =&gt; &quot;${p4_dir}/${title}/bin/p4_${title}&quot;,
+      target =&gt; &quot;${p4_common}/bin/p4_${p4d_instance_version}_bin&quot;,
+      notify =&gt; $service_notifies,
+    }
+
+    # manage link to instance-specific p4d
+    file { &quot;p4d_${title}_bin&quot;:
+      ensure =&gt; &#39;link&#39;,
+      path   =&gt; &quot;${p4_common}/bin/p4d_${title}_bin&quot;,
+      target =&gt; &quot;${p4_common}/bin/p4d_${p4d_instance_version}_bin&quot;,
+      notify =&gt; $service_notifies,
+    }
+
+    # manage instance wrapper
+    file { &quot;p4d_${title}&quot;:
+      ensure  =&gt; &#39;file&#39;,
+      path    =&gt; &quot;${p4_dir}/${title}/bin/p4d_${title}&quot;,
+      content =&gt; template(&#39;perforce/instance_script.erb&#39;),
+      mode    =&gt; &#39;0700&#39;,
+      notify  =&gt; $service_notifies,
+    }
+
+    # manage instance init script
+    file { &quot;p4d_${title}_init&quot;:
+      ensure  =&gt; &#39;file&#39;,
+      path    =&gt; &quot;${p4_dir}/${title}/bin/p4d_${title}_init&quot;,
+      content =&gt; template(&#39;perforce/p4d_instance_init.erb&#39;),
+      mode    =&gt; &#39;0700&#39;,
+      notify  =&gt; $service_notifies,
+    }
+
+  } ### END MANAGE P4D INSTANCE
+
+  ###################################################################
+  ### MANAGE THE P4BROKER INSTANCE
+  if($p4brokerport != undef) {
+
+    if($p4brokerport != undef) {
+      if(!defined(Class[&#39;perforce::broker&#39;])) {
+        fail(&#39;Usage: must declare perforce::broker class before
+              using this resource.&#39;)
+      }
+    }
+
+    if $p4broker_version == undef {
+      $p4broker_instance_version = $perforce::sdp_base::p4broker_version
+    } else {
+      $p4broker_instance_version = $p4broker_version
+    }
+
+    if $p4broker_target == undef {
+      if $p4port != undef {
+        $target_port = &quot;${ssl_prefix}localhost:${p4port}&quot;
+      } else {
+        fail(&#39;unable to determine target port for p4broker&#39;)
+      }
+    } else {
+      $target_port = $p4broker_target
+    }
+
+    # manage instance p4d service
+    if($::kernel == &#39;Linux&#39;) {
+      # service script
+      file { &quot;p4broker_${title}_service&quot;:
+        ensure =&gt; &#39;link&#39;,
+        path   =&gt; &quot;/etc/init.d/p4broker_${title}&quot;,
+        target =&gt; &quot;${p4_dir}/${title}/bin/p4broker_${title}_init&quot;,
+        owner  =&gt; &#39;root&#39;,
+        group  =&gt; &#39;root&#39;,
+      }
+      # service
+      service {&quot;p4broker_${title}&quot;:
+        ensure =&gt; $service_ensure,
+        enable =&gt; $service_enable,
+      }
+    }
+
+    # manage link to appropriate p4 client
+    file { &quot;p4broker_${title}&quot;:
+      ensure =&gt; &#39;link&#39;,
+      path   =&gt; &quot;${p4_dir}/${title}/bin/p4broker_${title}&quot;,
+      target =&gt; &quot;${p4_common}/bin/p4broker_${p4broker_instance_version}_bin&quot;,
+      notify =&gt; Service[&quot;p4broker_${title}&quot;],
+    }
+
+    # manage link to instance-specific p4d
+    file { &quot;p4broker_${title}_bin&quot;:
+      ensure =&gt; &#39;link&#39;,
+      path   =&gt; &quot;${p4_common}/bin/p4broker_${title}_bin&quot;,
+      target =&gt; &quot;${p4_common}/bin/p4broker_${p4broker_instance_version}_bin&quot;,
+      notify =&gt; Service[&quot;p4broker_${title}&quot;],
+    }
+
+    # manage instance variables file
+    file { &quot;p4_${title}.broker.cfg&quot;:
+      ensure  =&gt; &#39;file&#39;,
+      path    =&gt; &quot;${p4_common}/config/p4_${title}.broker.cfg&quot;,
+      mode    =&gt; &#39;0700&#39;,
+      content =&gt; template(&#39;perforce/broker_cfg.erb&#39;),
+      notify  =&gt; Service[&quot;p4broker_${title}&quot;],
+    }
+
+    # manage instance init script
+    file { &quot;p4broker_${title}_init&quot;:
+      ensure  =&gt; &#39;file&#39;,
+      path    =&gt; &quot;${p4_dir}/${title}/bin/p4broker_${title}_init&quot;,
+      content =&gt; template(&#39;perforce/p4broker_instance_init.erb&#39;),
+      mode    =&gt; &#39;0700&#39;,
+      notify  =&gt; Service[&quot;p4broker_${title}&quot;],
+    }
+
+  } ### END MANAGE P4BROKER INSTANCE
+
+
+
+
+
+
+
+
+}</pre>
+      </td>
+    </tr>
+  </table>
+</div>
+</div>
+
+      <div id="footer">
+  Generated on Tue May 16 13:26:35 2017 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.9 (ruby-2.4.1).
+</div>
+
+    </div>
+  </body>
+</html>

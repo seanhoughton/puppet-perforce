@@ -1,27 +1,62 @@
-# perforce::instance defined type
-#   - used to manage an instance of a p4d or p4broker in an sdp setting
+# perforce::instance
+#
+# @summary 
+#  Used to manage an instance of a p4d or p4broker in an sdp setting
+#
+# @example
+#   #include ::perforce::sdp_base
+#   #include ::perforce::client
+#   #include ::perforce::server
+#   
+#   ::perforce::instance {'1':
+#     server_id    => 'master',
+#     ensure       => 'running',
+#     p4port       => '1666',
+#   }
+#
+# @param ensure            If defined, manage the service, if `undef` create, but don't manage the service.
+# @param p4port            Port number to listen on (not full P4PORT).
+# @param dns_name          External DNS name of this server.
+# @param server_id         If defined, set the server ID to this value.
+# @param master_id         ID of the master server.
+# @param ssl               Whether or not ssl is required for the instance.
+# @param case_sensitive    Whether or not to use a case sensitive server.
+# @param p4d_version       The version of p4d to use.
+# @param p4brokerport
+# @param p4broker_version 
+# @param p4broker_target 
+# @param depots_mountpoint Option symlink to a mountpoint folder.
+# @param adminuser         Admin username, this will be cached for use by /p4/common/bin/p4login
+# @param adminpass.        Admin password, this will be cached for use by /p4/common/bin/p4login
+# @param servicepass       Admin username, this will be cached for use by /p4/common/bin/p4login -service
+# @param mailto            Email address to send p4reviews to.
+# @param mailfrom          Email address for `from` field for p4reviews.
+# @param mailhost          Smtp server to use for sending email.
+# @param license           If set, manage the content of `license` in the root folder.
+#
 define perforce::instance (
-  $ensure           = undef, # one setting for all managed services
+  String $ensure            = undef,
   # p4d settings
-  $p4port           = '1666',  # just the port number
-  $dns_name         = undef,   # DNS name of this server
-  $server_id        = undef,
-  $master_id        = 'master', # ID of the master
-  $ssl              = false,
-  $case_sensitive   = false,
-  $p4d_version      = undef,
+  String $p4port            = '1666',
+  String $dns_name          = undef,
+  String $server_id         = undef,
+  String $master_id         = 'master',
+  String $ssl               = false,
+  Boolean $case_sensitive   = false,
+  String $p4d_version       = undef,
   # p4broker_settings
-  $p4brokerport     = undef,
-  $p4broker_version = undef,
-  $p4broker_target  = undef,
-  $depots_mountpoint = undef,  # option symlink to a mountpoint folder
-  $adminuser        = $perforce::params::adminuser,
-  $adminpass        = $perforce::params::adminpass,
-  $servicepass      = $perforce::params::servicepass,
-  $mailto           = undef,
-  $mailfrom         = undef,
-  $mailhost         = undef,
-  $license          = undef
+  String $p4brokerport      = undef,
+  String $p4broker_version  = undef,
+  String $p4broker_target   = undef,
+  # general settings
+  String $depots_mountpoint = undef,
+  String $adminuser         = $perforce::params::adminuser,
+  String $adminpass         = $perforce::params::adminpass,
+  String $servicepass       = $perforce::params::servicepass,
+  String $mailto            = undef,
+  String $mailfrom          = undef,
+  String $mailhost          = undef,
+  String $license           = undef
 ) {
 
   $instance_name = $title

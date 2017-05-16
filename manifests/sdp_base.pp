@@ -1,5 +1,28 @@
 # perforce::sdp_base class
-#   - used to manage the base SDP installation
+#
+# @summary Used to manage the base SDP installation
+#
+# @example
+#   class { '::perforce::sdp_base':
+#    osuser => 'perforce',
+#    osgroup => 'perforce',
+#    p4_dir => '/p4',
+#   }
+#
+# @param osuser            Operating system user that will own the SDP directories and executables.
+# @param osuser_password   Operating system password (only used if osuser_manage is `true`).
+# @param osgroup           Operating system group that will own the SDP directories and executables.
+# @param osuser_manage     If true, this module will create and manage user and group.
+# @param p4_dir            The base SDP directory. Defaults to `/p4` on Linux systems.
+# @param depotdata_dir.    The mountpoint for the Perforce depot data.
+# @param metadata_dir.     The mountpoint for the Perforce metadata.
+# @param logs_dir          The mountpoint for the Perforce and SDP log files. This mountpoint must already exist.
+# @param sslprefix         The default ssl prefix to use (e.g. `ssl:`).
+# @param sdp_version       The SDP version to manage
+# @param staging_base_path The location where the binaries will be staged on the local node's filesystem.
+# @param default_file_mode The default rwx mode for managed files
+#
+#
 class perforce::sdp_base (
   $osuser               = $perforce::params::osuser,
   $osuser_password      = $perforce::params::osuser_password,
